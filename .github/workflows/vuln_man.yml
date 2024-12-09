@@ -49,50 +49,50 @@ jobs:
 
 
 ## Exercise Docker SBOM generation
-  # sbom-docker:
-  #   name: Generate docker SBOM
-  #   runs-on: ubuntu-latest
-  #   container: quay.io/pluribus_one/sbom_vex_scanner@sha256:4c93316f95a2fe12bd2683ec34ff36d8e3a29501c797fb4825e7e510bab29ce3
-  #   strategy:
-  #     fail-fast: false
-  #     matrix:
-  #       project: ["dvna", "vulnado"]
-  #       cdx_spec_version: ["1.5"]
+  sbom-docker:
+    name: Generate docker SBOM
+    runs-on: ubuntu-latest
+    container: quay.io/pluribus_one/sbom_vex_scanner@sha256:4c93316f95a2fe12bd2683ec34ff36d8e3a29501c797fb4825e7e510bab29ce3
+    strategy:
+      fail-fast: false
+      matrix:
+        project: ["dvna", "vulnado"]
+        cdx_spec_version: ["1.5"]
 
-  #   steps:
-  #     - name: Checkout Repository
-  #       uses: actions/checkout@v4
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
 
-  #     - name: Set up Docker Buildx
-  #       uses: docker/setup-buildx-action@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
 
-  #     - name: Build Docker image
-  #       id: build-image
-  #       uses: docker/build-push-action@v5
-  #       with:
-  #         context: "${{ github.workspace }}/vuln_apps/${{ matrix.project }}"
-  #         push: false
-  #         load: true
-  #         tags: ${{ matrix.project }}:latest
+      - name: Build Docker image
+        id: build-image
+        uses: docker/build-push-action@v5
+        with:
+          context: "${{ github.workspace }}/vuln_apps/${{ matrix.project }}"
+          push: false
+          load: true
+          tags: ${{ matrix.project }}:latest
 
-  #     - name: Generate docker SBOMs
-  #       run: >
-  #         cdxgen
-  #         --type docker
-  #         --format json
-  #         --spec-version="1.5"
-  #         --project-name="${{ project }}"
-  #         --project-version="build-${{ github.run_number }}"
-  #         -o "${{ project }}-docker_bom.json"
-  #         image:tag
+      - name: Generate docker SBOMs
+        run: >
+          cdxgen
+          --type docker
+          --format json
+          --spec-version="1.5"
+          --project-name="${{ project }}"
+          --project-version="build-${{ github.run_number }}"
+          -o "${{ project }}-docker_bom.json"
+          image:tag
 
-  #     - name: upload Artifacts
-  #       uses: actions/upload-artifact@v4
-  #       with:
-  #         name: sbom-${{matrix.project}}-docker
-  #         path: ${{ matrix.project }}-docker_bom.json
-  #         retention-days: 5
-  #         if-no-files-found: error
+      - name: upload Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: sbom-${{matrix.project}}-docker
+          path: ${{ matrix.project }}-docker_bom.json
+          retention-days: 5
+          if-no-files-found: error
 
 ## Exercise Merge multiple SBOMs
   # merge-sbom:
