@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
 
 jobs:
-Exercise SBOM generation
+## Exercise SBOM generation
   sbom:
     name: Generate app SBOM
     runs-on: ubuntu-latest
@@ -48,7 +48,7 @@ Exercise SBOM generation
           if-no-files-found: error
 
 
-#Exercise Docker SBOM generation
+## Exercise Docker SBOM generation
   sbom-docker:
     name: Generate docker SBOM
     runs-on: ubuntu-latest
