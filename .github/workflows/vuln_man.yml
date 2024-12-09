@@ -121,11 +121,11 @@ Exercise SBOM generation
       - name: Merge previously generated sboms
         run: >
           cyclonedx merge
-          --input-files file1.json file2.json…
-          --output-file output.json
-          --name output-project-name
-          --version "build-${{ github.run_number }}"
+          --input-files sboms-${{matrix.project}}/${{ matrix.project }}_bom.json sboms-${{matrix.project}}/${{ matrix.project }}-docker_bom.json
+          --output-file ${{ matrix.project }}_merged_sbom.json
           --hierarchical
+          --name ${{ matrix.project }}
+          --version "build-${{ github.run_number }}"
           --group devsecops-exercises
 
       - name: upload Artifacts
